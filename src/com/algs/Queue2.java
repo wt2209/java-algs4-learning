@@ -6,19 +6,13 @@ import com.wt.libs.StdOut;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class Queue<Item> implements Iterable<Item> {
-    private int n;
+public class Queue2<Item> implements Iterable<Item> {
     private Node<Item> first;
     private Node<Item> last;
+    private int n;
 
-    private class Node<Item> {
-        private Item item;
-        private Node<Item> next;
-    }
-
-    public Queue() {
-        first = null;
-        last = null;
+    public Queue2() {
+        first = last = null;
         n = 0;
     }
 
@@ -27,34 +21,39 @@ public class Queue<Item> implements Iterable<Item> {
         last = new Node<Item>();
         last.item = item;
         last.next = null;
-        if (isEmpty()) {
-            first = last;
-        }
-        else {
+        if (!isEmpty()) {
             oldLast.next = last;
+        } else {
+            first = last;
         }
         n++;
     }
 
-    public Item dequeue() {
-        if (isEmpty()) {
-            throw new NoSuchElementException();
+    public Item dequeue(){
+        if (!isEmpty()) {
+            Item item = first.item;
+            first = first.next;
+            n--;
+            if (isEmpty()) last = null;
+            return item;
         }
-        Item item = first.item;
-        first = first.next;
-        n--;
-        if (isEmpty()) {
-            last = null;
-        }
-        return item;
+        throw new NoSuchElementException();
     }
 
-    public boolean isEmpty() {
+    public int size(){
+        return n;
+    }
+
+    public boolean isEmpty(){
         return first == null;
     }
-
-    public int size() {
-        return n;
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        for(Item item: this) {
+            s.append(item).append(' ');
+        }
+        return s.toString();
     }
 
     @Override
@@ -62,21 +61,14 @@ public class Queue<Item> implements Iterable<Item> {
         return new ListIterator<Item>(first);
     }
 
-
-    @Override
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        for (Item item: this) {
-            s.append(item);
-            s.append(' ');
-        }
-        return s.toString();
+    private class Node<Item> {
+        private Item item;
+        private Node<Item> next;
     }
 
     private class ListIterator<Item> implements Iterator<Item> {
         private Node<Item> current;
-
-        ListIterator(Node<Item> first) {
+        public ListIterator(Node<Item> first) {
             current = first;
         }
 
@@ -87,25 +79,16 @@ public class Queue<Item> implements Iterable<Item> {
 
         @Override
         public Item next() {
-            if (!hasNext()) throw new NoSuchElementException();
-            Item item = current.item;
-            current = current.next;
-            return item;
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
+            if (hasNext()) {
+                Item item = current.item;
+                current = current.next;
+            }
+            throw new NoSuchElementException();
         }
     }
 
-    /**
-     * Unit tests the {@code Queue} data type.
-     *
-     * @param args the command-line arguments
-     */
     public static void main(String[] args) {
-        Queue<String> queue = new Queue<String>();
+        Queue2<String> queue = new Queue2<>();
         while (!StdIn.isEmpty()) {
             String item = StdIn.readString();
             if (!item.equals("-"))

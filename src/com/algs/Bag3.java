@@ -6,21 +6,22 @@ import com.wt.libs.StdOut;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class Bag2<Item> implements Iterable<Item> {
-
-    private class Node<Item>{
+public class Bag3<Item> implements Iterable<Item>{
+    private class Node<Item> {
         private Item item;
         private Node<Item> next;
     }
+
     private Node<Item> first;
+
     private int n;
 
-    public Bag2(){
+    public Bag3() {
         first = null;
         n = 0;
     }
 
-    public void add(Item item){
+    public void add(Item item) {
         Node<Item> old = first;
         first = new Node<Item>();
         first.item = item;
@@ -28,23 +29,24 @@ public class Bag2<Item> implements Iterable<Item> {
         n++;
     }
 
-    public int size(){
-        return n;
-    }
     public boolean isEmpty(){
         return first == null;
     }
 
+    public int size() {
+        return n;
+    }
 
     @Override
     public Iterator<Item> iterator() {
         return new ListIterator<>(first);
     }
 
-    private class ListIterator<Item> implements Iterator<Item>{
+    private class ListIterator<Item> implements Iterator<Item> {
         private Node<Item> current;
-        public ListIterator(Node<Item> first) {
-            current = first;
+
+        public ListIterator(Node<Item> current) {
+            this.current = current;
         }
 
         @Override
@@ -54,22 +56,17 @@ public class Bag2<Item> implements Iterable<Item> {
 
         @Override
         public Item next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException();
+            if (hasNext()) {
+                Item item = current.item;
+                current = current.next;
+                return item;
             }
-            Item item = current.item;
-            current = current.next;
-            return item;
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
+            throw new NoSuchElementException();
         }
     }
 
     public static void main(String[] args) {
-        Bag2<String> bag = new Bag2<String>();
+        Bag3<String> bag = new Bag3<String>();
         while (!StdIn.isEmpty()) {
             String item = StdIn.readString();
             bag.add(item);
