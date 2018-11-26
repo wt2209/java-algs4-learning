@@ -1,26 +1,26 @@
 package src.com.algs;
 
-import com.wt.libs.StdIn;
-import com.wt.libs.StdOut;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class Queue2<Item> implements Iterable<Item> {
+public class Queue3<Item> implements Iterable<Item>{
     private Node<Item> first;
     private Node<Item> last;
     private int n;
 
-    public Queue2() {
+    public Queue3() {
         first = last = null;
         n = 0;
     }
-
     public void enqueue(Item item) {
         Node<Item> oldLast = last;
-        last = new Node<Item>();
+        last = new Node<>();
         last.item = item;
         last.next = null;
+
+//        last = new Node<Item>();
+//        last.item = item;
+//        last.next = null;
         if (!isEmpty()) {
             oldLast.next = last;
         } else {
@@ -34,31 +34,23 @@ public class Queue2<Item> implements Iterable<Item> {
             Item item = first.item;
             first = first.next;
             n--;
-            if (isEmpty()) last = null;
+            if (isEmpty()) {
+                last = null;
+            }
+
             return item;
         }
         throw new NoSuchElementException();
     }
-
-    public int size(){
-        return n;
-    }
-
     public boolean isEmpty(){
         return first == null;
     }
-    @Override
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        for(Item item: this) {
-            s.append(item).append(' ');
-        }
-        return s.toString();
+    public int size(){
+        return n;
     }
-
     @Override
     public Iterator<Item> iterator() {
-        return new ListIterator<Item>(first);
+        return new MyIterator<Item>(first);
     }
 
     private class Node<Item> {
@@ -66,39 +58,39 @@ public class Queue2<Item> implements Iterable<Item> {
         private Node<Item> next;
     }
 
-    private class ListIterator<Item> implements Iterator<Item> {
+    private class MyIterator<Item> implements Iterator<Item> {
         private Node<Item> current;
-        public ListIterator(Node<Item> first) {
+        public MyIterator(Node<Item> first) {
             current = first;
         }
 
         @Override
         public boolean hasNext() {
-            return current != null;
+            return first != null;
         }
 
         @Override
         public Item next() {
-            if (!hasNext()) throw new NoSuchElementException();
             Item item = current.item;
             current = current.next;
             return item;
         }
     }
 
+
     public static void main(String[] args) {
-        Queue2<String> queue = new Queue2<>();
-        while (!StdIn.isEmpty()) {
-            String item = StdIn.readString();
+        Queue3<String> queue = new Queue3<>();
+        while (!com.wt.libs.StdIn.isEmpty()) {
+            String item = com.wt.libs.StdIn.readString();
             if (!item.equals("-"))
                 queue.enqueue(item);
             else if (!queue.isEmpty())
-                StdOut.print(queue.dequeue() + " ");
+                com.wt.libs.StdOut.print(queue.dequeue() + " ");
         }
-        StdOut.println("(" + queue.size() + " left on queue)");
+        com.wt.libs.StdOut.println("(" + queue.size() + " left on queue)");
 
         for(String item: queue) {
-            StdOut.println(queue.dequeue());
+            com.wt.libs.StdOut.println(queue.dequeue());
         }
     }
 }
